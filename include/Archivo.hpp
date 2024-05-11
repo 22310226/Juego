@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <stdexcept>  // Para std::out_of_range
 
 using namespace std;
 
@@ -15,22 +16,26 @@ public:
 
     Personaje(string nombre, int vida, int fuerza) : nombre(nombre), vida(vida), fuerza(fuerza) {}
     virtual void mostrarInformacion() = 0;  // Método virtual puro
+    virtual void moverDerecha() = 0;
+    virtual void moverIzquierda() = 0;
+    virtual void golpear() = 0;
+    virtual void matar() = 0;
 };
 
 class Jugador : public Personaje {
 public:
     Jugador(string nombre, int vida, int fuerza) : Personaje(nombre, vida, fuerza) {}
 
-    void moverDerecha() {
+    void moverDerecha() override {
         cout << nombre << " se mueve a la derecha.\n";
     }
-    void moverIzquierda() {
+    void moverIzquierda() override {
         cout << nombre << " se mueve a la izquierda.\n";
     }
-    void golpear() {
+    void golpear() override {
         cout << nombre << " golpea.\n";
     }
-    void matar() {
+    void matar() override {
         cout << nombre << " mata a su oponente.\n";
     }
     void mostrarInformacion() override {
@@ -42,16 +47,16 @@ class Contrincante : public Personaje {
 public:
     Contrincante(string nombre, int vida, int fuerza) : Personaje(nombre, vida, fuerza) {}
 
-    void moverDerecha() {
+    void moverDerecha() override {
         cout << nombre << " se mueve a la derecha.\n";
     }
-    void moverIzquierda() {
+    void moverIzquierda() override {
         cout << nombre << " se mueve a la izquierda.\n";
     }
-    void golpear() {
+    void golpear() override {
         cout << nombre << " golpea.\n";
     }
-    void matar() {
+    void matar() override {
         cout << nombre << " mata a su oponente.\n";
     }
     void mostrarInformacion() override {
@@ -70,24 +75,15 @@ public:
         }
     }
 
-    void cargarPersonajes(string path) {
-        ifstream archivo(path);
-        string tipo, nombre, linea;
-        int vida, fuerza;
+    void agregarPersonaje(Personaje* p) {
+        personajes.push_back(p);
+    }
 
-        while (getline(archivo, linea)) {
-            stringstream ss(linea);
-            getline(ss, tipo, ',');
-            getline(ss, nombre, ',');
-            ss >> vida;
-            ss.ignore();  // Ignorar la coma
-            ss >> fuerza;
-
-            if (tipo == "Jugador") {
-                personajes.push_back(new Jugador(nombre, vida, fuerza));
-            } else if (tipo == "Contrincante") {
-                personajes.push_back(new Contrincante(nombre, vida, fuerza));
-            }
+    Personaje* obtenerPersonaje(int index) {
+        if (index >= 0 && index < personajes.size()) {
+            return personajes[index];
+        } else {
+            throw std::out_of_range("Índice de personaje fuera de rango.");
         }
     }
 
@@ -97,10 +93,3 @@ public:
         }
     }
 };
-
-int main() {
-    AdministradorDePersonajes administradorDePersonajes;
-    administradorDePersonajes.cargarPersonajes("personajes.txt");
-    administradorDePersonajes.mostrarPersonajes();
-    return 0;
-}
