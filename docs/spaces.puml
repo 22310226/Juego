@@ -1,0 +1,23 @@
+@startuml space
+
+class Juego
+class Jugador{
+    +MoverDerecha()
+    +MoverIzquierda()
+    +Atacar()
+}
+class Contrincante
+
+class 
+class Vida
+class Poder
+class Nivel
+class Puntuacion
+class Colisionable
+
+class Escenario
+class Terreno
+class Habitacion
+
+Juego "1" *-- "*" Nivel
+Nivel "1" *-- "1" Contrincante
