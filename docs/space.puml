@@ -1,0 +1,40 @@
+@startuml space
+
+class Jugador
+class Juego
+class Contrincante{
+    +MoverDerecha()
+    +Moverizquierda()
+    +Golpear()
+    +Matar()
+}
+
+class Brincar
+class Correr
+class Golpear
+
+class Vida
+class Nivel
+class Puntuacion
+class Fuerza
+class Skill
+
+class Escenario
+class Habitacion
+class Terreno
+class Calle
+class Colisionable
+
+Juego "1" *-- "1" Jugador
+Juego "1" *-- "*" Nivel
+Nivel "1" *-- "1" Contrincante
+Contrincante "1" --|> "1" Jugador
+Habitacion "1" --|> "1..*" Escenario
+Terreno "1" --|> "1..*" Escenario
+Calle "1" --|> "1..*" Escenario
+Golpear --|> Colisionable
+Brincar --|> Colisionable
+Fuerza --|> Skill
+Jugador "1" o-- "12.. 18" Fuerza 
+
+@enduml
